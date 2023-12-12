@@ -1,4 +1,11 @@
+using WebMVC.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+string connectionString = "Endpoint=https://cng-ene-dev-001.azconfig.io;Id=9xKl;Secret=iq0SHZd9QutmbNeIiqYyjQmdVQuxg7A6nbNt3gpxcWs=";
+builder.Configuration.AddAzureAppConfiguration(connectionString);
+
+builder.Services.AddTransient<IProductService, ProductService>();
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();

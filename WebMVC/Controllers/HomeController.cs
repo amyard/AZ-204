@@ -8,16 +8,17 @@ namespace WebMVC.Controllers;
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
+    private readonly IProductService _productService;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(ILogger<HomeController> logger, IProductService productService)
     {
         _logger = logger;
+        _productService = productService;
     }
 
     public IActionResult Index()
     {
-        ProductService productService = new ProductService();
-        List<Product> products = productService.GetProducts();
+        List<Product> products = _productService.GetProducts();
 
         return View(products);
     }
