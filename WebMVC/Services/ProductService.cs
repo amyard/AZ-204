@@ -1,5 +1,7 @@
 ﻿using Microsoft.FeatureManagement;
+using Newtonsoft.Json;
 using System.Data.SqlClient;
+using System.Text.Json;
 using WebMVC.Models;
 
 namespace WebMVC.Services
@@ -40,34 +42,51 @@ namespace WebMVC.Services
             return new SqlConnection(_configuration["SQLConnection"]);
         }
 
+        // get data from DB
+        //public async Task<List<Product>> GetProducts()
+        //{
+        //    SqlConnection conn = GetConnection();
+        //    List<Product> products = new List<Product>();
+        //    string statement = "Select ProductID, ProductName, Quantity from Products";
+
+        //    conn.Open();
+        //    SqlCommand cmd = new SqlCommand(statement, conn);
+        //    using (SqlDataReader reader = cmd.ExecuteReader())
+        //    {
+        //        while (reader.Read())
+        //        {
+        //            Product product = new Product()
+        //            {
+        //                ProductID = reader.GetInt32(0),
+        //                ProductName = reader.GetString(1),
+        //                Quantity = reader.GetInt32(2)
+        //            };
+
+        //            products.Add(product);
+        //        }
+        //    }
+        //    conn.Close();
+
+        //    return await _featureManager.IsEnabledAsync("beta") 
+        //        ? products.Take(2).ToList()
+        //        : products;
+        //}
+
+        // get data with Azure Functions
         public async Task<List<Product>> GetProducts()
         {
-            SqlConnection conn = GetConnection();
-            List<Product> products = new List<Product>();
-            string statement = "Select ProductID, ProductName, Quantity from Products";
+            string fucntionURL = "https://func-01-ene-dev-001.azurewebsites.net/api/GetProducts?code=CUNQ4OX2kGOUu0djOOpHHUenUomBimLTZHNU76rQHDh-AzFuU8lK8A==";
 
-            conn.Open();
-            SqlCommand cmd = new SqlCommand(statement, conn);
-            using (SqlDataReader reader = cmd.ExecuteReader())
+            using (HttpClient client = new HttpClient())
             {
-                while (reader.Read())
-                {
-                    Product product = new Product()
-                    {
-                        ProductID = reader.GetInt32(0),
-                        ProductName = reader.GetString(1),
-                        Quantity = reader.GetInt32(2)
-                    };
-
-                    products.Add(product);
-                }
+                HttpResponseMessage response = await client.GetAsync(fucntionURL);
+                string content = await response.Content.ReadAsStringAsync();
+                List<Product> products = JsonConvert.DeserializeObject<List<Product>>(content);
+                
+                return await _featureManager.IsEnabledAsync("beta")
+                    ? products.Take(2).ToList()
+                    : products;
             }
-            conn.Close();
-
-            return await _featureManager.IsEnabledAsync("beta") 
-                ? products.Take(2).ToList()
-                : products;
         }
-
     }
 }
