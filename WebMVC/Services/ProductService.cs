@@ -1,4 +1,5 @@
-﻿using System.Data.SqlClient;
+﻿using Microsoft.FeatureManagement;
+using System.Data.SqlClient;
 using WebMVC.Models;
 
 namespace WebMVC.Services
@@ -11,10 +12,17 @@ namespace WebMVC.Services
         //private static string db_database = "sql-db-ene-dev-001";
 
         private readonly IConfiguration _configuration;
+        private readonly IFeatureManager _featureManager;
 
-        public ProductService(IConfiguration configuration)
+        public ProductService(IConfiguration configuration, IFeatureManager featureManager)
         {
             _configuration = configuration;
+            _featureManager = featureManager;
+        }
+
+        public async Task<bool> IsBeta()
+        {
+            return await _featureManager.IsEnabledAsync("beta");
         }
 
         private SqlConnection GetConnection()
@@ -32,7 +40,7 @@ namespace WebMVC.Services
             return new SqlConnection(_configuration["SQLConnection"]);
         }
 
-        public List<Product> GetProducts()
+        public async Task<List<Product>> GetProducts()
         {
             SqlConnection conn = GetConnection();
             List<Product> products = new List<Product>();
@@ -56,7 +64,9 @@ namespace WebMVC.Services
             }
             conn.Close();
 
-            return products;
+            return await _featureManager.IsEnabledAsync("beta") 
+                ? products.Take(2).ToList()
+                : products;
         }
 
     }
