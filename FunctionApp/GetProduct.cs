@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System.Data.SqlClient;
 using System.Collections.Generic;
+using System;
 
 namespace FunctionApp
 {
@@ -78,7 +79,8 @@ namespace FunctionApp
 
         private static SqlConnection GetConnection()
         {
-            string connectionString = "Server=tcp:appserver-dev-001.database.windows.net,1433;Initial Catalog=sql-db-ene-dev-001;Persist Security Info=False;User ID=sqladmin;Password=Admin123*;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            string connectionString = Environment.GetEnvironmentVariable("SQLAZURECONNSTR_SQLConnectionString");
+            //string connectionString = "Server=tcp:appserver-dev-001.database.windows.net,1433;Initial Catalog=sql-db-ene-dev-001;Persist Security Info=False;User ID=sqladmin;Password=Admin123*;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             
             return new SqlConnection(connectionString);
         }
