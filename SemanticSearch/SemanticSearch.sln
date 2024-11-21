@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticSearch.Tests", "SemanticSearch.Tests\SemanticSearch.Tests.csproj", "{A61E0347-AC8D-4A43-BE24-DAF2BCA74283}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemanticSearch.API", "SemanticSearch.API\SemanticSearch.API.csproj", "{5FE71B3E-C7F4-4BFF-916F-7693BA908390}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A61E0347-AC8D-4A43-BE24-DAF2BCA74283}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A61E0347-AC8D-4A43-BE24-DAF2BCA74283}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A61E0347-AC8D-4A43-BE24-DAF2BCA74283}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A61E0347-AC8D-4A43-BE24-DAF2BCA74283}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FE71B3E-C7F4-4BFF-916F-7693BA908390}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FE71B3E-C7F4-4BFF-916F-7693BA908390}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FE71B3E-C7F4-4BFF-916F-7693BA908390}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FE71B3E-C7F4-4BFF-916F-7693BA908390}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
