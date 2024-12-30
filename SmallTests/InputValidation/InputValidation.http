@@ -1,0 +1,15 @@
+@InputValidation_HostAddress = https://localhost:44393
+
+
+POST {{InputValidation_HostAddress}}/api/register
+Content-Type: application/json
+
+{
+  "email": "valid@email.com",
+  "dateOfBirth": "2010-12-12",
+  "personalInfo": {
+    "firstName": "",
+    "lastName": ""
+  }
+}
+###
