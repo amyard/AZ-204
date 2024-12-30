@@ -1,0 +1,6 @@
+﻿services:
+  hybridcachedemo:
+    image: hybridcachedemo
+    build:
+      context: .
+      dockerfile: HybridCacheDemo/Dockerfile

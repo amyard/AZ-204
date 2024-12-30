@@ -1,0 +1,6 @@
+@HybridCacheDemo_HostAddress = https://localhost:44359
+
+GET {{HybridCacheDemo_HostAddress}}/weather/London
+Accept: application/json
+
+###
