@@ -1,0 +1,21 @@
+@HttpClientVersions_HostAddress = https://localhost:44377/
+
+# HttpClient
+GET {{HttpClientVersions_HostAddress}}/users/v1/amyard
+Accept: application/json
+###
+
+# HttpClientFactory
+GET {{HttpClientVersions_HostAddress}}/users/v2/amyard
+Accept: application/json
+###
+
+# HttpClientFactory named
+GET {{HttpClientVersions_HostAddress}}/users/v3/amyard
+Accept: application/json
+###
+
+# typed HttpClient
+GET {{HttpClientVersions_HostAddress}}/users/v3/amyard
+Accept: application/json
+###
