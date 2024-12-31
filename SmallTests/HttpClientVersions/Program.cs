@@ -1,5 +1,7 @@
 using HttpClientVersions;
+using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
+using Polly;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,7 +39,37 @@ builder.Services.AddHttpClient<GitHubService>((serviceProvider, httpClient) =>
         PooledConnectionIdleTimeout = TimeSpan.FromMinutes(5)
     };
 })
-.SetHandlerLifetime(Timeout.InfiniteTimeSpan);
+.SetHandlerLifetime(Timeout.InfiniteTimeSpan)
+// .AddResilienceHandler("custom", pipeline =>
+// {
+//     pipeline.AddRetry(new HttpRetryStrategyOptions
+//     {
+//         MaxRetryAttempts = 3,
+//         BackoffType = DelayBackoffType.Exponential, // every subsequence retry will have larger delay value
+//         UseJitter = true,
+//         Delay = TimeSpan.FromMilliseconds(500)
+//     });
+//
+//     // if during 10 sec we fail 90% of request, we will prevent sending requests for 5 sec.
+//     // after 5 sec we will make test call to check the downtown stream
+//     pipeline.AddCircuitBreaker(new HttpCircuitBreakerStrategyOptions
+//     {
+//         SamplingDuration = TimeSpan.FromSeconds(10),
+//         FailureRatio = 0.9,
+//         MinimumThroughput = 5,
+//         BreakDuration = TimeSpan.FromSeconds(5),
+//     });
+//     
+//     // timeout for per request
+//     pipeline.AddTimeout(TimeSpan.FromSeconds(1)); 
+// })
+.AddStandardResilienceHandler();  // default resilient template handler. the same code as above commented 
+
+builder.Services.AddSingleton<ILogger>(sp =>
+{
+    var loggerFactory = sp.GetRequiredService<ILoggerFactory>();
+    return loggerFactory.CreateLogger("DefaultLogger");
+});
 
 var app = builder.Build();
 
