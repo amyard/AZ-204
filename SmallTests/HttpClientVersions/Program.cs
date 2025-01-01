@@ -1,4 +1,5 @@
 using HttpClientVersions;
+using HttpClientVersions.DelegatingHandler;
 using Microsoft.Extensions.Http.Resilience;
 using Microsoft.Extensions.Options;
 using Polly;
@@ -22,16 +23,22 @@ builder.Services.AddHttpClient("github", (serviceProvider, httpClient) =>
     httpClient.BaseAddress = new Uri("https://api.github.com");
 });
 
+builder.Services.AddTransient<LoggingHandler>();
+builder.Services.AddTransient<GithubAuthenticationHandler>();
+
 // Typed httpClient v4
 // register as Transient in DI
 builder.Services.AddHttpClient<GitHubService>((serviceProvider, httpClient) =>
 {
-    var gitHubSettings = serviceProvider.GetRequiredService<IOptions<GitHubSettings>>().Value;
-
-    httpClient.DefaultRequestHeaders.Add("Authorization", gitHubSettings.AccessToken);
-    httpClient.DefaultRequestHeaders.Add("User-Agent", gitHubSettings.UserAgent);
+    // we move logic into delegate handlers
+    // var gitHubSettings = serviceProvider.GetRequiredService<IOptions<GitHubSettings>>().Value;
+    //
+    // httpClient.DefaultRequestHeaders.Add("Authorization", gitHubSettings.AccessToken);
+    // httpClient.DefaultRequestHeaders.Add("User-Agent", gitHubSettings.UserAgent);
     httpClient.BaseAddress = new Uri("https://api.github.com");
 })
+.AddHttpMessageHandler<LoggingHandler>()
+.AddHttpMessageHandler<GithubAuthenticationHandler>() // if we comment logic in body on service
 .ConfigurePrimaryHttpMessageHandler(() =>
 {
     return new SocketsHttpHandler
